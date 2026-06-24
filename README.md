@@ -8,7 +8,7 @@
 
 ## UI 预览
 
-![UI 预览](docs/images/ui-preview.png)
+![UI 预览](docs/images/ui-preview.svg)
 
 ## 安装
 
@@ -51,7 +51,7 @@ portable_config/
 └─ icc/                  # 色彩配置文件
 docs/
 ├─ custom-updates.md     # 本维护版特色说明
-└─ images/ui-preview.png # UI 预览图
+└─ images/ui-preview.svg # UI 预览图
 ```
 
 ## 快捷键提示
