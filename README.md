@@ -10,6 +10,10 @@
 
 ![UI 预览](docs/images/ui-preview.svg)
 
+## 当前仓库状态
+
+当前仓库已先上传公开说明、通用核心配置、快捷键预设、脚本选项示例和 UI 预览。完整本地整理包中还包含更多第三方脚本、shader 与资源文件；继续同步时请保留原作者 README / LICENSE，避免提交个人运行数据、字体二进制和私密 token。
+
 ## 安装
 
 1. 下载或克隆本仓库。
@@ -35,20 +39,18 @@
 - 集成弹幕相关配置，适合中文用户使用。
 - 保留片头片尾跳过、章节识别、播放历史菜单等增强功能。
 - 中文化 stats 体验，方便查看播放与渲染信息。
-- 提供常见 shader、脚本和脚本配置，适合直接作为便携版 mpv 配置使用。
+- 提供 shader 启用入口，但默认不强制加载高负载 shader。
 
 ## 目录说明
 
 ```text
 portable_config/
-├─ mpv.conf              # mpv 主配置
-├─ input.conf            # 快捷键配置
-├─ scripts/              # Lua 脚本
-├─ script-opts/          # 脚本选项
-├─ shaders/              # shader 文件
-├─ script-modules/       # 脚本依赖模块
-├─ fonts/                # 字体目录说明，不附带字体文件
-└─ icc/                  # 色彩配置文件
+├─ mpv.conf              # mpv 主配置，通用硬件默认值
+├─ input.conf            # 快捷键与菜单预设
+├─ scripts/README.md     # 脚本同步说明
+├─ script-opts/          # 脚本选项示例
+├─ shaders/README.md     # shader 同步说明
+└─ fonts/README.md       # 字体说明，不附带字体文件
 docs/
 ├─ custom-updates.md     # 本维护版特色说明
 └─ images/ui-preview.svg # UI 预览图
