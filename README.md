@@ -8,7 +8,7 @@
 
 ## UI 预览
 
-![UI 预览](docs/images/ui-preview.svg)
+![UI 预览](docs/images/ui-preview.jpg)
 
 ## 当前仓库状态
 
@@ -53,7 +53,7 @@ portable_config/
 └─ fonts/README.md       # 字体说明，不附带字体文件
 docs/
 ├─ custom-updates.md     # 本维护版特色说明
-└─ images/ui-preview.svg # UI 预览图
+└─ images/ui-preview.jpg # UI 预览图
 ```
 
 ## 快捷键提示
