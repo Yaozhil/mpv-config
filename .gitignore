@@ -1,0 +1,31 @@
+*.zip
+*.7z
+*.rar
+*.log
+*.tmp
+Thumbs.db
+.DS_Store
+
+# Runtime data
+portable_config/cache/*
+portable_config/files/*
+portable_config/playlists/*
+portable_config/state/*
+portable_config/watch_later/*
+!portable_config/cache/.gitkeep
+!portable_config/files/.gitkeep
+
+# User/private data
+config.json
+*.xml
+*.ass
+*.srt
+*.sup
+
+# Font binaries are intentionally not committed
+*.ttf
+*.otf
+*.ttc
+*.woff
+*.woff2
+*.eot
