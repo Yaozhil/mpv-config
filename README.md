@@ -1,8 +1,8 @@
 # Yaozhil MPV 整合包
 
-面向 Windows mpv 的中文化自制 UI 整合包，最初基于 [dyphire/mpv-config](https://github.com/dyphire/mpv-config) 的配置结构继续整理，并加入个人维护的 uosc 布局、快捷键菜单、弹幕、片头片尾标记、AList/OpenList 网盘入口和中文统计信息体验。
+面向 Windows mpv 的自制 UI 整合包，最初基于 [dyphire/mpv-config](https://github.com/dyphire/mpv-config) 的配置结构继续整理，并加入个人维护的 uosc 布局、快捷键菜单、弹幕、片头片尾标记、AList/OpenList 网盘入口和中文统计信息体验。
 
-本发布版已经做通用化处理：不固定显卡、不固定具体音频设备、不写死本机 mpv 路径，不包含播放历史、缓存、截图、watch_later 与个人 API secret。
+所有发布版都已做通用化处理。
 
 > 上游参考：`dyphire/mpv-config` 是 Windows 下 mpv 配置项目；`yosh-wang/mpv-stats.lua-zh-chinese-translation-` 提供中文版 stats.lua 思路与同步说明。
 
