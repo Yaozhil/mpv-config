@@ -25,11 +25,9 @@
 ## 安装
 
 1. 下载完整整合包：[mpv-yaozhi-2026.06.29.zip](https://github.com/Yaozhil/mpv-config/releases/latest/download/mpv-yaozhi-2026.06.29.zip)，解压即可使用。
-2. 整合包内含 `杳知配置助手（MPV）.exe`；也可单独下载：[yaozhi-mpv-config-assistant.exe](https://github.com/Yaozhil/mpv-config/releases/latest/download/yaozhi-mpv-config-assistant.exe)。
+2. 整合包内含 `杳知配置助手（MPV）.exe`；也可单独下载：[杳知配置助手（MPV）.zip](https://github.com/user-attachments/files/29464922/MPV.zip)。
 3. 打开配置助手，按需配置即可（会自动获取）。
 4. 如果只想使用配置助手，可把 `杳知配置助手（MPV）.exe` 放到 mpv 目录，与 `mpv.exe` 同级。
-
-> 上传 Release 附件时，建议把本地 `C:\Users\杳知\Desktop\mpv（杳知整合包）6.29.zip` 重命名为 `mpv-yaozhi-2026.06.29.zip`，把 `C:\Users\杳知\Desktop\杳知配置助手（MPV）.exe` 重命名为 `yaozhi-mpv-config-assistant.exe`，这样上面的下载链接会自动生效。
 
 ## 主要特色
 
