@@ -68,6 +68,7 @@ docs/
 
 - [dyphire/mpv-config](https://github.com/dyphire/mpv-config)
 - [yosh-wang/mpv-stats.lua-zh-chinese-translation-](https://github.com/yosh-wang/mpv-stats.lua-zh-chinese-translation-)
+- [yosh-wang/auto_bluray-ISO-](https://github.com/yosh-wang/auto_bluray-ISO-)
 - mpv 社区脚本与相关开源项目
 
 各脚本、shader 与第三方组件的版权和许可归原作者所有。
