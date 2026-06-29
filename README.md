@@ -4,8 +4,8 @@
 
 所有发布版都已做通用化处理。
 
-> 上游参考：`dyphire/mpv-config` 是 Windows 下 mpv 配置项目；  
->`yosh-wang/mpv-stats.lua-zh-chinese-translation-` 提供中文版 stats.lua 思路与同步说明；
+> 上游参考：`dyphire/mpv-config` 是 Windows 下 mpv 配置项目；<br>
+>`yosh-wang/mpv-stats.lua-zh-chinese-translation-` 提供中文版 stats.lua 思路与同步说明；<br>
 >`yosh-wang/auto_bluray-ISO-`提供圆盘ISO思路并深度优化。
 
 ## UI 预览
