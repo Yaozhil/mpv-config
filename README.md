@@ -10,11 +10,17 @@
 
 ![主界面标注](docs/images/ui-annotated.png)
 
-更多截图：
+### 底栏细节
 
-- [底栏细节](docs/images/player-bar-annotated.png)
-- [网盘登录面板](docs/images/alist-login-annotated.png)
-- [空闲网盘入口](docs/images/webdav-entry-annotated.png)
+![底栏细节](docs/images/player-bar-annotated.png)
+
+### 网盘登录面板
+
+![网盘登录面板](docs/images/alist-login-annotated.png)
+
+### 空闲网盘入口
+
+![空闲网盘入口](docs/images/webdav-entry-annotated.png)
 
 ## 安装
 
