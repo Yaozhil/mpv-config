@@ -18,9 +18,9 @@
 
 ![网盘登录面板](docs/images/alist-login-annotated.png)
 
-### 空闲网盘入口
+### 杳知配置助手
 
-![空闲网盘入口](docs/images/webdav-entry-annotated.png)
+![杳知配置助手](docs/images/config-assistant.png)
 
 ## 安装
 
