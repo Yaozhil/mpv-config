@@ -59,12 +59,6 @@ docs/
 └─ images/               # UI 展示图
 ```
 
-## 发布说明
-
-
-
-发布前检查见 [发布前检查](docs/release-check.md)。
-
 ## 许可与来源说明
 
 本仓库整理自个人使用配置，并参考以下项目结构或思路：
@@ -73,7 +67,8 @@ docs/
 - [yosh-wang/mpv-stats.lua-zh-chinese-translation-](https://github.com/yosh-wang/mpv-stats.lua-zh-chinese-translation-)
 - mpv 社区脚本与相关开源项目
 
-各脚本、shader 与第三方组件的版权和许可归原作者所有。若上游项目自带 LICENSE / README，本仓库会尽量保留原始说明。
+各脚本、shader 与第三方组件的版权和许可归原作者所有。
+若上游项目自带 LICENSE / README，本仓库会尽量保留原始说明。
 
 ## 免责声明
 
