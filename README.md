@@ -20,7 +20,7 @@
 
 ### 杳知配置助手
 
-![杳知配置助手](docs/images/config-assistant.png)
+![杳知配置助手](docs/images/杳知配置助手截图.png)
 
 ## 安装
 
