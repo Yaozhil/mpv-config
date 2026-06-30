@@ -39,6 +39,7 @@
 
 
 - 配置助手教程：把`杳知配置助手2.0（MPV）.exe` 放到 mpv 根目录，与 `mpv.exe` 同级即可<br>
+
 - 配置助手下载：[杳知配置助手2.0（MPV）.zip](https://github.com/user-attachments/files/29499009/2.0.MPV.zip)
 
 ## 主要特色
