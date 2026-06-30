@@ -31,11 +31,11 @@
 
 ## 安装
 
-1. 下载完整整合包：[mpv-yaozhi-2026.06.30+.zip](https://github.com/Yaozhil/mpv-config/releases/download/%E6%9D%B3%E7%9F%A5mvp%E6%95%B4%E5%90%88%E5%8C%85/mpv-Yaozhi.2026.6.30+.zip)，解压即可使用<br>
+1. 下载整合包：[mpv-yaozhi-2026.06.30+.zip](https://github.com/Yaozhil/mpv-config/releases/download/%E6%9D%B3%E7%9F%A5mvp%E6%95%B4%E5%90%88%E5%8C%85/mpv-Yaozhi.2026.6.30+.zip)，解压即可使用<br>
 
 2. 打开配置助手，按需配置即可（会自动获取显卡信息）<br>
 
-  注：整合内已有 `杳知配置助手2.0`
+    注：整合内已有 `杳知配置助手2.0`
 
 
 - 配置助手教程：把`杳知配置助手2.0（MPV）.exe` 放到 mpv 根目录，与 `mpv.exe` 同级即可<br>
