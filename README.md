@@ -24,7 +24,7 @@
 
 ### 杳知配置助手3.0
 
-![杳知配置助手3.0](https://github.com/Yaozhil/mpv-config/blob/main/docs/images/%E6%9D%B3%E7%9F%A5%E9%85%8D%E7%BD%AE%E5%8A%A9%E6%89%8B3.0%E6%88%AA%E5%9B%BE.png)
+![杳知配置助手3.0](docs/images/%E6%9D%B3%E7%9F%A5%E9%85%8D%E7%BD%AE%E5%8A%A9%E6%89%8B3.0%E6%88%AA%E5%9B%BE.png)
 
 
 ## 安装
