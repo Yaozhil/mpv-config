@@ -29,6 +29,11 @@
 
 ![杳知配置助手2.0](docs/images/%E6%9D%B3%E7%9F%A5%E9%85%8D%E7%BD%AE%E5%8A%A9%E6%89%8B2.0%E6%88%AA%E5%9B%BE.png)
 
+### 杳知配置助手3.0
+
+![杳知配置助手3.0](docs/images/%E6%9D%B3%E7%9F%A5%E9%85%8D%E7%BD%AE%E5%8A%A9%E6%89%8B3.0%E6%88%AA%E5%9B%BE.png.png)
+
+
 ## 安装
 
 1. 下载整合包：[mpv-yaozhi-2026.06.30+.zip](https://github.com/Yaozhil/mpv-config/releases/download/%E6%9D%B3%E7%9F%A5mvp%E6%95%B4%E5%90%88%E5%8C%85/mpv-Yaozhi.2026.6.30+.zip)，解压即可使用<br>
