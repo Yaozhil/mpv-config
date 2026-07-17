@@ -1,6 +1,6 @@
 # Yaozhil MPV 整合包
 
-面向 Windows mpv 的自制 UI 整合包<br>基于 [dyphire/mpv-config](https://github.com/dyphire/mpv-config) 的配置结构继续整理<br>并加入个人维护的 uosc 布局、快捷键菜单、弹幕、片头片尾标记、AList/OpenList 网盘入口和中文统计信息体验
+面向 Windows mpv 的自制 UI 整合包<br>基于 [dyphire/mpv-config](https://github.com/dyphire/mpv-config) 的配置结构继续整理<br>并加入个人维护的 uosc 布局、快捷键菜单、弹幕、片头片尾标记、AList/OpenList 网盘入口、起播格式徽章和中文统计信息体验
 
 所有发布版都已做通用化处理。
 
@@ -27,6 +27,26 @@
 ![杳知配置助手3.0](docs/images/%E6%9D%B3%E7%9F%A5%E9%85%8D%E7%BD%AE%E5%8A%A9%E6%89%8B3.0%E6%88%AA%E5%9B%BE.png)
 
 
+## 新功能：专业起播格式徽章
+
+> 像专业播放器一样，在起播阶段一眼确认片源规格。
+
+播放器会在首帧和画面边界稳定后，自动识别画面标准与当前选中的音轨，并在实际视频画面的右上安全区短暂显示。默认淡入、停留 4 秒后淡出，不会变成常驻水印。
+
+- **画面格式**：Dolby Vision、HDR10+、HDR10、HLG、SDR。
+- **音频格式**：Dolby Atmos、DTS:X、Dolby TrueHD、DTS-HD、AC-4、MPEG-H，以及 FLAC、PCM、AAC 等常见格式。
+- **智能定位**：适配上下/左右黑边，并识别蓝光 ISO 中编码进视频帧的黑边。
+- **当前音轨优先**：多音轨文件按当前选中音轨识别；切换音轨后会重新显示，避免串标。
+- **可自由控制**：右键菜单「其它 > 开/关 起播格式标签」可随时切换，状态会自动保存。
+
+### 实际播放效果
+
+![有字幕播放场景中的 Dolby Vision 和 Dolby Atmos 起播格式徽章](docs/images/startup-format-badges-playback.png)
+
+### 起播画面与完整 UI
+
+![绿色电影开头标场景中的 Dolby Vision 和 Dolby Atmos 起播格式徽章](docs/images/startup-format-badges-opening.png)
+
 ## 安装
 
 1. 下载整合包：[mpv-yaozhi-2026.7.16.zip](https://github.com/Yaozhil/mpv-config/releases/download/%E6%9D%B3%E7%9F%A5mpv%E6%95%B4%E5%90%88%E5%8C%85/mpv-yaozhi-2026.7.16.zip)，解压即可使用<br>
@@ -42,6 +62,7 @@
 
 ## 主要特色
 
+- 新增专业起播格式徽章：自动识别画面标准与当前音轨，在实际画面安全区短暂显示。
 - uosc 中文界面与菜单体验优化。
 - 常用 UI 操作、播放控制、文件管理、字幕、音轨和播放列表快捷键整理。
 - 集成弹幕相关配置。
