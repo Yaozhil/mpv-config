@@ -23,10 +23,13 @@ ASS/文本字幕、OSD、音频、硬件解码、着色器或所选 VO。
 
 ![上游错误色相与修复后正确色相的同帧对比](comparison-upstream-vs-fixed.jpg)
 
+![上游与修复版动态对比](hdr-pgs-comparison-animated.gif)
+
 ## 示例文件
 
 - [`hdr10-pgs-synthetic-sample.mkv`](hdr10-pgs-synthetic-sample.mkv)：15.015 秒合成 HDR10/PQ + PGS 最小复现视频，无音频。
 - [`comparison-upstream-vs-fixed.jpg`](comparison-upstream-vs-fixed.jpg)：上游错误色相与修复后正确色相的同帧对比。
+- [`hdr-pgs-comparison-animated.gif`](hdr-pgs-comparison-animated.gif)：直接展示上游与修复版色相差异的动态对比。
 - [`output-upstream.txt`](output-upstream.txt)：上游版本完整日志。
 - [`output-patched.txt`](output-patched.txt)：修复验证版本完整日志。
 - [`sample-ffprobe.json`](sample-ffprobe.json)：示例视频的完整 FFprobe 流与容器信息。
