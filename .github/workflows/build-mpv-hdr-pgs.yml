@@ -77,6 +77,8 @@ jobs:
             mpv-hdr-pgs-gcc64-
 
       - name: Build static x86-64 mpv
+        id: build
+        continue-on-error: true
         shell: bash
         env:
           CCACHE_DIR: ${{ github.workspace }}/.ccache
@@ -84,6 +86,30 @@ jobs:
           set -euxo pipefail
           cd winbuild/mpv-winbuild-cmake
           bash ../build.sh -t 64 -c gcc -s false
+
+      - name: Collect failed build logs
+        if: steps.build.outcome == 'failure'
+        shell: bash
+        run: |
+          find winbuild/mpv-winbuild-cmake/build64 -type f \
+            \( -iname '*-*.log' -o -path '*/ffbuild/config.log' \) \
+            -print > build-log-files.txt
+          7z a build-logs.7z @build-log-files.txt
+
+      - name: Upload failed build logs
+        if: steps.build.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-hdr-pgs-build-logs
+          path: |
+            build-logs.7z
+            build-log-files.txt
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Stop after failed build
+        if: steps.build.outcome == 'failure'
+        run: exit 1
 
       - name: Verify package contents
         shell: bash
