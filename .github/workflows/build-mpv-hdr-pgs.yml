@@ -36,7 +36,7 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Check out configuration and patch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Prepare matching Windows build system
         shell: bash
@@ -47,9 +47,13 @@ jobs:
             winbuild/mpv-winbuild-cmake
 
           cd winbuild/mpv-winbuild-cmake
-          git am --3way ../patch_pr/0000-mpv-add-patch.patch
+          if ! git am --3way ../patch_pr/0000-mpv-add-patch.patch; then
+            git am --abort || true
+            echo "::notice::Base tree already contains or conflicts with the optional patch framework patch"
+          fi
           for patch in ../patch/*.patch; do
-            git am --3way "$patch" || git am --abort
+            echo "Applying required build patch: $patch"
+            git am --3way "$patch"
           done
 
           cp "$GITHUB_WORKSPACE/patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch" \
@@ -62,21 +66,29 @@ jobs:
             's#https://git.videolan.org/git/ffmpeg/nv-codec-headers.git#https://github.com/FFmpeg/nv-codec-headers.git#' \
             packages/nvcodec-headers.cmake
 
+          test -f packages/curl.cmake
+          grep -Eq '^[[:space:]]*curl[[:space:]]*$' packages/mpv.cmake
+          grep -Fq -- '-Dlibcurl=enabled' packages/mpv.cmake
+          if grep -E 'list\(APPEND removed .*"curl"' packages/CMakeLists.txt; then
+            echo "::error::curl is still excluded from the mpv dependency graph"
+            exit 1
+          fi
           grep -A5 -B2 'GIT_REPOSITORY.*mpv-player' packages/mpv.cmake
           grep -n 'PATCH_COMMAND.*mpv-' packages/mpv.cmake
+          grep -n -A4 -B4 -- '-Dlibcurl=enabled' packages/mpv.cmake
           grep -n 'GIT_REPOSITORY.*nv-codec-headers' packages/nvcodec-headers.cmake
 
       - name: Restore reusable build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             winbuild/mpv-winbuild-cmake/build64
             winbuild/mpv-winbuild-cmake/src_packages
             winbuild/mpv-winbuild-cmake/install_rustup
             .ccache
-          key: mpv-hdr-pgs-ubuntu-gcc64-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
+          key: mpv-hdr-pgs-libcurl-v1-ubuntu-gcc64-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
           restore-keys: |
-            mpv-hdr-pgs-ubuntu-gcc64-
+            mpv-hdr-pgs-libcurl-v1-ubuntu-gcc64-
 
       - name: Build static x86-64 mpv
         id: build
@@ -100,7 +112,7 @@ jobs:
 
       - name: Upload failed build logs
         if: steps.build.outcome == 'failure'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: mpv-hdr-pgs-build-logs
           path: |
@@ -126,7 +138,7 @@ jobs:
           sha256sum "$archive" > artifact/SHA256SUMS.txt
 
       - name: Upload custom mpv
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: mpv-hdr-pgs-x86_64
           path: artifact/*
