@@ -47,14 +47,28 @@ jobs:
             winbuild/mpv-winbuild-cmake
 
           cd winbuild/mpv-winbuild-cmake
-          if ! git am --3way ../patch_pr/0000-mpv-add-patch.patch; then
-            git am --abort || true
-            echo "::notice::Base tree already contains or conflicts with the optional patch framework patch"
-          fi
           for patch in ../patch/*.patch; do
             echo "Applying required build patch: $patch"
             git am --3way "$patch"
           done
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("packages/mpv.cmake")
+          text = path.read_text()
+          patch_command = (
+              "    GIT_CLONE_FLAGS \"\"\n"
+              "    PATCH_COMMAND ${EXEC} git am --3way "
+              "${CMAKE_CURRENT_SOURCE_DIR}/mpv-*.patch\n"
+          )
+          if "PATCH_COMMAND ${EXEC} git am --3way ${CMAKE_CURRENT_SOURCE_DIR}/mpv-*.patch" not in text:
+              anchor = '    GIT_CLONE_FLAGS "--filter=tree:0"\n'
+              if anchor not in text:
+                  raise SystemExit("Could not locate mpv GIT_CLONE_FLAGS anchor")
+              text = text.replace(anchor, patch_command, 1)
+              path.write_text(text)
+          PY
 
           cp "$GITHUB_WORKSPACE/patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch" \
             packages/mpv-9000-image-subs-colorspace.patch
