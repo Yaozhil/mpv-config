@@ -19,7 +19,17 @@ ASS/文本字幕、OSD、音频、硬件解码、着色器或所选 VO。
 
 真实 HDR 设备 A/B 测试已确认图形字幕颜色恢复正常，同时视频颜色保持正确。
 
-## 附件
+## 同帧对比
 
-- `comparison-upstream-vs-fixed.jpg`：上游错误色相与修复后正确色相的同帧对比。
-- `mpv-hdr-pgs-colorspace-repro.zip`：合成 HDR10/PQ + PGS 样片、上游及修复版完整日志、FFprobe 元数据、补丁、SHA-256 与复现说明。
+![上游错误色相与修复后正确色相的同帧对比](comparison-upstream-vs-fixed.jpg)
+
+## 示例文件
+
+- [`hdr10-pgs-synthetic-sample.mkv`](hdr10-pgs-synthetic-sample.mkv)：15.015 秒合成 HDR10/PQ + PGS 最小复现视频，无音频。
+- [`comparison-upstream-vs-fixed.jpg`](comparison-upstream-vs-fixed.jpg)：上游错误色相与修复后正确色相的同帧对比。
+- [`output-upstream.txt`](output-upstream.txt)：上游版本完整日志。
+- [`output-patched.txt`](output-patched.txt)：修复验证版本完整日志。
+- [`sample-ffprobe.json`](sample-ffprobe.json)：示例视频的完整 FFprobe 流与容器信息。
+- [`0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch`](0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch)：已通过真实 HDR 设备 A/B 验证的定点核心补丁。
+
+所有材料均以独立文件公开，不再提供 ZIP 打包文件。
