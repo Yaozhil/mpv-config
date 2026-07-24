@@ -58,9 +58,13 @@ jobs:
           sed -i \
             '/GIT_REPOSITORY https:\/\/github.com\/mpv-player\/mpv.git/a\\    GIT_TAG 99b4c12cc' \
             packages/mpv.cmake
+          sed -i \
+            's#https://git.videolan.org/git/ffmpeg/nv-codec-headers.git#https://github.com/FFmpeg/nv-codec-headers.git#' \
+            packages/nvcodec-headers.cmake
 
           grep -A5 -B2 'GIT_REPOSITORY.*mpv-player' packages/mpv.cmake
           grep -n 'PATCH_COMMAND.*mpv-' packages/mpv.cmake
+          grep -n 'GIT_REPOSITORY.*nv-codec-headers' packages/nvcodec-headers.cmake
 
       - name: Restore reusable build cache
         uses: actions/cache@v4
