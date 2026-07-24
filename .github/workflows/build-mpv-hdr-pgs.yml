@@ -72,9 +72,9 @@ jobs:
             winbuild/mpv-winbuild-cmake/src_packages
             winbuild/mpv-winbuild-cmake/install_rustup
             .ccache
-          key: mpv-hdr-pgs-gcc64-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
+          key: mpv-hdr-pgs-gcc64-gcc16compat-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
           restore-keys: |
-            mpv-hdr-pgs-gcc64-
+            mpv-hdr-pgs-gcc64-gcc16compat-
 
       - name: Build static x86-64 mpv
         id: build
@@ -82,6 +82,10 @@ jobs:
         shell: bash
         env:
           CCACHE_DIR: ${{ github.workspace }}/.ccache
+          # Arch Linux moved to GCC 16, which treats u8 literals as char8_t
+          # while bootstrapping the older GCC snapshot used by this builder.
+          CXXFLAGS: -O2 -fno-char8_t
+          CXXFLAGS_FOR_BUILD: -O2 -fno-char8_t
         run: |
           set -euxo pipefail
           cd winbuild/mpv-winbuild-cmake
@@ -130,4 +134,3 @@ jobs:
           path: artifact/*
           if-no-files-found: error
           retention-days: 7
-
