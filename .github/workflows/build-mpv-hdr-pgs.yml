@@ -45,7 +45,7 @@ jobs:
         run: |
           set -euxo pipefail
           git clone --depth 1 https://github.com/zhongfly/mpv-winbuild.git winbuild
-          git clone --depth 1 https://github.com/shinchiro/mpv-winbuild-cmake.git \
+          git clone https://github.com/shinchiro/mpv-winbuild-cmake.git \
             winbuild/mpv-winbuild-cmake
 
           cd winbuild/mpv-winbuild-cmake
