@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Install build dependencies
         run: |
+          printf '[multilib]\nInclude = /etc/pacman.d/mirrorlist\n' \
+            >> /etc/pacman.conf
           pacman-key --init
           pacman-key --populate archlinux
           pacman -Syu --noconfirm
