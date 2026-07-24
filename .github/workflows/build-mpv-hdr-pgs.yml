@@ -51,7 +51,7 @@ jobs:
           cd winbuild/mpv-winbuild-cmake
           git am --3way ../patch_pr/0000-mpv-add-patch.patch
           for patch in ../patch/*.patch; do
-            git am --3way "$patch"
+            git am --3way "$patch" || git am --abort
           done
 
           cp "$GITHUB_WORKSPACE/patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch" \
