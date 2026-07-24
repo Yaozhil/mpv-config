@@ -1,0 +1,105 @@
+name: Build mpv HDR PGS fix
+
+on:
+  push:
+    branches:
+      - codex/hdr-pgs-core-fix
+    paths:
+      - ".github/workflows/build-mpv-hdr-pgs.yml"
+      - "patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    container:
+      image: ghcr.io/archlinux/archlinux:base-devel
+
+    steps:
+      - name: Install build dependencies
+        run: |
+          pacman-key --init
+          pacman-key --populate archlinux
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm --needed \
+            git ninja cmake meson clang lld libc++ unzip ragel yasm nasm \
+            gperf rst2pdf lib32-gcc-libs lib32-glib2 python-cairo curl wget \
+            mimalloc ccache python-pip 7zip shaderc
+          python -m pip install --break-system-packages roman
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Check out configuration and patch
+        uses: actions/checkout@v4
+
+      - name: Prepare matching Windows build system
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git clone --depth 1 https://github.com/zhongfly/mpv-winbuild.git winbuild
+          git clone --depth 1 https://github.com/shinchiro/mpv-winbuild-cmake.git \
+            winbuild/mpv-winbuild-cmake
+
+          cd winbuild/mpv-winbuild-cmake
+          git am --3way ../patch_pr/0000-mpv-add-patch.patch
+          for patch in ../patch/*.patch; do
+            git am --3way "$patch"
+          done
+
+          cp "$GITHUB_WORKSPACE/patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch" \
+            packages/mpv-9000-image-subs-colorspace.patch
+
+          sed -i \
+            '/GIT_REPOSITORY https:\/\/github.com\/mpv-player\/mpv.git/a\\    GIT_TAG 99b4c12cc' \
+            packages/mpv.cmake
+
+          grep -A5 -B2 'GIT_REPOSITORY.*mpv-player' packages/mpv.cmake
+          grep -n 'PATCH_COMMAND.*mpv-' packages/mpv.cmake
+
+      - name: Restore reusable build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            winbuild/mpv-winbuild-cmake/build64
+            winbuild/mpv-winbuild-cmake/src_packages
+            winbuild/mpv-winbuild-cmake/install_rustup
+            .ccache
+          key: mpv-hdr-pgs-gcc64-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
+          restore-keys: |
+            mpv-hdr-pgs-gcc64-
+
+      - name: Build static x86-64 mpv
+        shell: bash
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+        run: |
+          set -euxo pipefail
+          cd winbuild/mpv-winbuild-cmake
+          bash ../build.sh -t 64 -c gcc -s false
+
+      - name: Verify package contents
+        shell: bash
+        run: |
+          set -euxo pipefail
+          archive="$(find winbuild/mpv-winbuild-cmake/release \
+            -maxdepth 1 -type f -name 'mpv-x86_64-*.7z' -print -quit)"
+          test -n "$archive"
+          7z l "$archive" | grep -E 'mpv\.(exe|com)'
+          mkdir artifact
+          cp "$archive" artifact/
+          sha256sum "$archive" > artifact/SHA256SUMS.txt
+
+      - name: Upload custom mpv
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-hdr-pgs-x86_64
+          path: artifact/*
+          if-no-files-found: error
+          retention-days: 7
+
