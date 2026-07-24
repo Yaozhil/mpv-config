@@ -16,6 +16,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 360
+    env:
+      MPV_WINBUILD_COMMIT: b4b1088c30e8821e012fd20052de4c2d3a8eaad4
+      MPV_WINBUILD_CMAKE_COMMIT: 04283f7e911149809c46bc236a834cf7134ba133
 
     steps:
       - name: Install build dependencies
@@ -42,9 +45,26 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          git clone --depth 1 https://github.com/zhongfly/mpv-winbuild.git winbuild
-          git clone https://github.com/shinchiro/mpv-winbuild-cmake.git \
-            winbuild/mpv-winbuild-cmake
+
+          clone_commit() {
+            local repository="$1"
+            local destination="$2"
+            local commit="$3"
+            git init "$destination"
+            git -C "$destination" remote add origin "$repository"
+            git -C "$destination" fetch --depth 1 origin "$commit"
+            git -C "$destination" checkout --detach FETCH_HEAD
+            test "$(git -C "$destination" rev-parse HEAD)" = "$commit"
+          }
+
+          clone_commit \
+            https://github.com/zhongfly/mpv-winbuild.git \
+            winbuild \
+            "$MPV_WINBUILD_COMMIT"
+          clone_commit \
+            https://github.com/shinchiro/mpv-winbuild-cmake.git \
+            winbuild/mpv-winbuild-cmake \
+            "$MPV_WINBUILD_CMAKE_COMMIT"
 
           cd winbuild/mpv-winbuild-cmake
           for patch in ../patch/*.patch; do
@@ -85,6 +105,13 @@ jobs:
             's#https://git.videolan.org/git/ffmpeg/nv-codec-headers.git#https://github.com/FFmpeg/nv-codec-headers.git#' \
             packages/nvcodec-headers.cmake
 
+          # curl enables experimental ECH by default in the imported patch,
+          # but the pinned OpenSSL build does not expose an ECH API.
+          # Keep normal HTTPS, Windows CA, HTTP/2 and HTTPS RR enabled.
+          sed -i \
+            's/-DUSE_ECH=ON/-DUSE_ECH=OFF/' \
+            packages/curl.cmake
+
           test -f packages/curl.cmake
           grep -Eq '^[[:space:]]*curl[[:space:]]*$' packages/mpv.cmake
           grep -Fq -- '-Dlibcurl=enabled' packages/mpv.cmake
@@ -94,6 +121,11 @@ jobs:
           fi
           grep -Fq -- '-DCURL_USE_OPENSSL=ON' packages/curl.cmake
           grep -Fq -- '-DCURL_CA_NATIVE=ON' packages/curl.cmake
+          grep -Fq -- '-DUSE_ECH=OFF' packages/curl.cmake
+          if grep -Fq -- '-DUSE_ECH=ON' packages/curl.cmake; then
+            echo "::error::curl ECH is enabled with an OpenSSL build that lacks ECH"
+            exit 1
+          fi
           if grep -Eq 'ngtcp2|nghttp3|USE_NGTCP2=ON|USE_NGHTTP3=ON' \
             packages/CMakeLists.txt packages/curl.cmake; then
             echo "::error::optional HTTP/3 dependencies are still enabled"
@@ -102,7 +134,7 @@ jobs:
           grep -A5 -B2 'GIT_REPOSITORY.*mpv-player' packages/mpv.cmake
           grep -n 'PATCH_COMMAND.*mpv-' packages/mpv.cmake
           grep -n -A4 -B4 -- '-Dlibcurl=enabled' packages/mpv.cmake
-          grep -n -A8 -B4 -- '-DCURL_USE_OPENSSL=ON' packages/curl.cmake
+          grep -n -A10 -B4 -- '-DCURL_USE_OPENSSL=ON' packages/curl.cmake
           grep -n 'GIT_REPOSITORY.*nv-codec-headers' packages/nvcodec-headers.cmake
 
       - name: Restore reusable build cache
@@ -113,9 +145,35 @@ jobs:
             winbuild/mpv-winbuild-cmake/src_packages
             winbuild/mpv-winbuild-cmake/install_rustup
             .ccache
-          key: mpv-hdr-pgs-libcurl-no-http3-v2-ubuntu-gcc64-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
+          key: mpv-hdr-pgs-libcurl-pinned-no-ech-v3-ubuntu-gcc64-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
           restore-keys: |
-            mpv-hdr-pgs-libcurl-no-http3-v2-ubuntu-gcc64-
+            mpv-hdr-pgs-libcurl-pinned-no-ech-v3-ubuntu-gcc64-
+
+      - name: Preflight and build libcurl dependency chain
+        shell: bash
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+        run: |
+          set -euxo pipefail
+          cd winbuild/mpv-winbuild-cmake
+
+          cmake -Wno-dev --fresh \
+            -DTARGET_ARCH=x86_64-w64-mingw32 \
+            -DCOMPILER_TOOLCHAIN=gcc \
+            -DENABLE_CCACHE=ON \
+            -DSINGLE_SOURCE_LOCATION="$PWD/src_packages" \
+            -DRUSTUP_LOCATION="$PWD/install_rustup" \
+            -G Ninja \
+            -S . \
+            -B build64
+
+          ninja -C build64 download || true
+          if [ ! -f build64/install/bin/cross-gcc ]; then
+            ninja -C build64 gcc
+            rm -rf build64/toolchain
+          fi
+          ninja -C build64 update
+          ninja -C build64 curl
 
       - name: Build static x86-64 mpv
         id: build
