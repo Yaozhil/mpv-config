@@ -41,8 +41,8 @@ index de82638..02d2c13 100644
 +    This option does not affect text subtitles, OSD, or the video itself.
 +
  ``--sub-hdr-peak=<sdr|10-10000>``
-     Controls the text subtitle and OSD diffuse white level in cd/m虏 (nits)
-     for HDR output (default: sdr). ``sdr`` is 203 cd/m虏 for standard SDR white.
+     Controls the text subtitle and OSD diffuse white level in cd/m² (nits)
+     for HDR output (default: sdr). ``sdr`` is 203 cd/m² for standard SDR white.
 diff --git a/video/out/vo_gpu_next.c b/video/out/vo_gpu_next.c
 index a7567e1..78de932 100644
 --- a/video/out/vo_gpu_next.c
