@@ -48,6 +48,11 @@ jobs:
 
           cd winbuild/mpv-winbuild-cmake
           for patch in ../patch/*.patch; do
+            if [ "$(basename "$patch")" = \
+              "0008-ngtcp2-nghttp3-nghttp2-add-ngtcp2-nghttp3-nghttp2.patch" ]; then
+              echo "Skipping optional HTTP/3 patch incompatible with current OpenSSL"
+              continue
+            fi
             echo "Applying required build patch: $patch"
             git am --3way "$patch"
           done
@@ -87,9 +92,17 @@ jobs:
             echo "::error::curl is still excluded from the mpv dependency graph"
             exit 1
           fi
+          grep -Fq -- '-DCURL_USE_OPENSSL=ON' packages/curl.cmake
+          grep -Fq -- '-DCURL_CA_NATIVE=ON' packages/curl.cmake
+          if grep -Eq 'ngtcp2|nghttp3|USE_NGTCP2=ON|USE_NGHTTP3=ON' \
+            packages/CMakeLists.txt packages/curl.cmake; then
+            echo "::error::optional HTTP/3 dependencies are still enabled"
+            exit 1
+          fi
           grep -A5 -B2 'GIT_REPOSITORY.*mpv-player' packages/mpv.cmake
           grep -n 'PATCH_COMMAND.*mpv-' packages/mpv.cmake
           grep -n -A4 -B4 -- '-Dlibcurl=enabled' packages/mpv.cmake
+          grep -n -A8 -B4 -- '-DCURL_USE_OPENSSL=ON' packages/curl.cmake
           grep -n 'GIT_REPOSITORY.*nv-codec-headers' packages/nvcodec-headers.cmake
 
       - name: Restore reusable build cache
@@ -100,9 +113,9 @@ jobs:
             winbuild/mpv-winbuild-cmake/src_packages
             winbuild/mpv-winbuild-cmake/install_rustup
             .ccache
-          key: mpv-hdr-pgs-libcurl-v1-ubuntu-gcc64-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
+          key: mpv-hdr-pgs-libcurl-no-http3-v2-ubuntu-gcc64-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
           restore-keys: |
-            mpv-hdr-pgs-libcurl-v1-ubuntu-gcc64-
+            mpv-hdr-pgs-libcurl-no-http3-v2-ubuntu-gcc64-
 
       - name: Build static x86-64 mpv
         id: build
