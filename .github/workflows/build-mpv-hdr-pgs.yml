@@ -16,22 +16,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 360
-    container:
-      image: ghcr.io/archlinux/archlinux:base-devel
 
     steps:
       - name: Install build dependencies
         run: |
-          printf '[multilib]\nInclude = /etc/pacman.d/mirrorlist\n' \
-            >> /etc/pacman.conf
-          pacman-key --init
-          pacman-key --populate archlinux
-          pacman -Syu --noconfirm
-          pacman -S --noconfirm --needed \
-            git ninja cmake meson clang lld libc++ unzip ragel yasm nasm \
-            gperf rst2pdf lib32-gcc-libs lib32-glib2 python-cairo curl wget \
-            mimalloc ccache python-pip 7zip shaderc
-          python -m pip install --break-system-packages roman
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential bison flex gettext git mercurial subversion \
+            ninja-build gyp cmake yasm nasm automake pkg-config libtool \
+            libtool-bin gcc-multilib g++-multilib clang lld libc++-dev \
+            libc++abi-dev libgmp-dev libmpfr-dev libmpc-dev libgcrypt20-dev \
+            gperf ragel texinfo autopoint re2c asciidoc python3-pip \
+            python3-cairo docbook2x unzip p7zip-full curl wget ccache
+          python3 -m pip install --break-system-packages \
+            rst2pdf meson mako jsonschema roman
           git config --global user.name "github-actions[bot]"
           git config --global user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
@@ -72,9 +70,9 @@ jobs:
             winbuild/mpv-winbuild-cmake/src_packages
             winbuild/mpv-winbuild-cmake/install_rustup
             .ccache
-          key: mpv-hdr-pgs-gcc64-gcc16compat-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
+          key: mpv-hdr-pgs-ubuntu-gcc64-${{ hashFiles('patches/0001-vo_gpu_next-add-image-subtitle-colorspace-control.patch') }}
           restore-keys: |
-            mpv-hdr-pgs-gcc64-gcc16compat-
+            mpv-hdr-pgs-ubuntu-gcc64-
 
       - name: Build static x86-64 mpv
         id: build
@@ -82,10 +80,6 @@ jobs:
         shell: bash
         env:
           CCACHE_DIR: ${{ github.workspace }}/.ccache
-          # Arch Linux moved to GCC 16, which treats u8 literals as char8_t
-          # while bootstrapping the older GCC snapshot used by this builder.
-          CXXFLAGS: -O2 -fno-char8_t
-          CXXFLAGS_FOR_BUILD: -O2 -fno-char8_t
         run: |
           set -euxo pipefail
           cd winbuild/mpv-winbuild-cmake
@@ -98,7 +92,7 @@ jobs:
           find winbuild/mpv-winbuild-cmake/build64 -type f \
             \( -iname '*-*.log' -o -path '*/ffbuild/config.log' \) \
             -print > build-log-files.txt
-          7z a build-logs.7z @build-log-files.txt
+          7za a build-logs.7z @build-log-files.txt
 
       - name: Upload failed build logs
         if: steps.build.outcome == 'failure'
@@ -122,7 +116,7 @@ jobs:
           archive="$(find winbuild/mpv-winbuild-cmake/release \
             -maxdepth 1 -type f -name 'mpv-x86_64-*.7z' -print -quit)"
           test -n "$archive"
-          7z l "$archive" | grep -E 'mpv\.(exe|com)'
+          7za l "$archive" | grep -E 'mpv\.(exe|com)'
           mkdir artifact
           cp "$archive" artifact/
           sha256sum "$archive" > artifact/SHA256SUMS.txt
