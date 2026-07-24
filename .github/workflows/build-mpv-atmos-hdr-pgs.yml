@@ -150,15 +150,16 @@ jobs:
           curl -fsSLO \
             "https://github.com/Haivision/srt/archive/refs/tags/v${SRT_VER}.tar.gz"
           tar xzf "v${SRT_VER}.tar.gz"
-          cmake -S "srt-${SRT_VER}" -B "srt-${SRT_VER}/build" \
-            -DCMAKE_TOOLCHAIN_FILE=/usr/x86_64-w64-mingw32/share/mingw/toolchain.cmake \
+          mkdir "srt-${SRT_VER}/build"
+          cd "srt-${SRT_VER}/build"
+          x86_64-w64-mingw32-cmake .. \
             -DENABLE_APPS=OFF \
             -DENABLE_BONDING=OFF \
             -DENABLE_STATIC=OFF \
             -DENABLE_SHARED=ON \
             -DCMAKE_INSTALL_PREFIX="$SYS"
-          cmake --build "srt-${SRT_VER}/build" -j"$(nproc)"
-          cmake --install "srt-${SRT_VER}/build"
+          cmake --build . -j"$(nproc)"
+          cmake --install .
           if [ -f "$SYS/bin/srt.dll" ] && [ ! -f "$SYS/bin/libsrt.dll" ]; then
             cp "$SYS/bin/srt.dll" "$SYS/bin/libsrt.dll"
           fi
